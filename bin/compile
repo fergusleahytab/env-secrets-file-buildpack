@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# match title indentation
+indent () {
+    sed -u 's/^/       /'
+}
+
 # can override SECRETS_DIR, SECRETS_DECODE
 BUILD_DIR=$1
 CACHE_DIR=$2
@@ -20,7 +25,7 @@ sed_format_ext="s/_\([a-z]*$\)/.\L\1/Ig" # _PEM -> .pem
 sed_formatter=$sed_remove_prefix$sed_convert_path$sed_lowercase$sed_format_ext
 
 if [ -d "$ENV_DIR" ]; then
-    echo "-----> Secrets: running secret file generator ($SECRETS_PATH)"
+    echo "-----> secret-file-buildpack: saving env secrets to files  ($SECRETS_PATH)"
     mkdir -p $SECRETS_PATH
     saved=0
     for env_key in $(ls $ENV_DIR); do
@@ -28,7 +33,7 @@ if [ -d "$ENV_DIR" ]; then
         if echo "$env_key" | grep -qE "$acceptlist_regex"; then
             # convert env key to pathname
             file_path=$(echo "$env_key" | sed -e $sed_formatter)
-            echo -e "\t\t> $env_key -> $file_path"
+            echo "> $env_key -> $file_path" | indent
             # create folder path
             mkdir -p "$SECRETS_PATH/$(dirname $file_path)"
             # decode env file into new path
@@ -36,5 +41,5 @@ if [ -d "$ENV_DIR" ]; then
             saved=$((saved + 1))
         fi
     done
-    echo -e "\t\tsaved $saved secrets"
+    echo "saved $saved secrets" | indent
 fi
