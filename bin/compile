@@ -24,6 +24,7 @@ if [ -d "$ENV_DIR" ]; then
     mkdir -p $SECRETS_PATH
     saved=0
     for env_key in $(ls $ENV_DIR); do
+        # find keys matching acceptlist
         if echo "$env_key" | grep -qE "$acceptlist_regex"; then
             # convert env key to pathname
             file_path=$(echo "$env_key" | sed -e $sed_formatter)
