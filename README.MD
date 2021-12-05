@@ -11,7 +11,7 @@ The buildpack will save the all secrets (variables starting with `SECRET_FILE_`)
 1. Add the buildpack to your Heroku app:
 
     ```
-    $ heroku buildpacks:add https://github.com/heroku/heroku-buildpack-ssh-key.git -i 1
+    $ heroku buildpacks:add https://github.com/fergusleahytab/env-secrets-file-buildpack -i 1
     ```
 
     Keep in mind that the buildpack order is important. If you'll specify this buildpack after your default 
