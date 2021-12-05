@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-echo "env to file buildpack"
+echo "secret-file-buildpack"
 exit 0
