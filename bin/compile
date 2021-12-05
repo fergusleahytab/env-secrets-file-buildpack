@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+# can override SECRETS_DIR, SECRETS_DECODE
+
+ENV_DIR=$1
+SECRETS_DIR=${SECRETS_DIR:-".secrets"}
+SECRETS_PATH="$1/$SECRETS_DIR"
+SECRETS_DECODE=${SECRETS_DECODE:-"base64 --decode"}
+
+
+acceptlist_regex=${2:-'^SECRET_FILE_(.*)'}
+
+# reformat secret key to pathname
+sed_remove_prefix="s/SECRET_FILE_//g;"
+sed_convert_path="s/__/\//g;" # __ -> /
+sed_lowercase="s/.*/\L&/;"
+sed_format_ext="s/_\([a-z]*$\)/.\L\1/Ig" # _PEM -> .pem
+sed_formatter=$sed_remove_prefix$sed_convert_path$sed_lowercase$sed_format_ext
+
+if [ -d "$ENV_DIR" ]; then
+    echo "-----> Secrets: running secret file generator ($SECRETS_PATH)"
+    mkdir -p $SECRETS_PATH
+    saved=0
+    for env_key in $(ls $ENV_DIR); do
+        if echo "$env_key" | grep -qE "$acceptlist_regex"; then
+
+            file_path=$(echo "$env_key" | gsed -e $sed_formatter)
+            echo -e "\t\t> $env_key -> $file_path"
+            # create folder path
+            mkdir -p "$SECRETS_PATH/$(dirname $file_path)"
+            # decode env file into new path
+            cat $ENV_DIR/$env_key | $SECRETS_DECODE > "$SECRETS_PATH/$file_path"
+            saved=$((saved + 1))
+        fi
+    done
+    echo -e "\t\tsaved $saved secrets"
+fi
