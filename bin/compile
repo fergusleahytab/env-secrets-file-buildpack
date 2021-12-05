@@ -26,7 +26,7 @@ if [ -d "$ENV_DIR" ]; then
     for env_key in $(ls $ENV_DIR); do
         if echo "$env_key" | grep -qE "$acceptlist_regex"; then
             # convert env key to pathname
-            file_path=$(echo "$env_key" | gsed -e $sed_formatter)
+            file_path=$(echo "$env_key" | sed -e $sed_formatter)
             echo -e "\t\t> $env_key -> $file_path"
             # create folder path
             mkdir -p "$SECRETS_PATH/$(dirname $file_path)"
