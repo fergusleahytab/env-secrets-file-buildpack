@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 
 # can override SECRETS_DIR, SECRETS_DECODE
-
-ENV_DIR=$1
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
 SECRETS_DIR=${SECRETS_DIR:-".secrets"}
-SECRETS_PATH="$1/$SECRETS_DIR"
+
+SECRETS_PATH="$BUILD_DIR/$SECRETS_DIR"
 SECRETS_DECODE=${SECRETS_DECODE:-"base64 --decode"}
 
 
-acceptlist_regex=${2:-'^SECRET_FILE_(.*)'}
+acceptlist_regex=${SECRET_MATCHER:-'^SECRET_FILE_(.*)'}
 
 # reformat secret key to pathname
 sed_remove_prefix="s/SECRET_FILE_//g;"
