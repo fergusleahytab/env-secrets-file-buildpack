@@ -23,7 +23,7 @@ if [ -d "$ENV_DIR" ]; then
     saved=0
     for env_key in $(ls $ENV_DIR); do
         if echo "$env_key" | grep -qE "$acceptlist_regex"; then
-
+            # convert env key to pathname
             file_path=$(echo "$env_key" | gsed -e $sed_formatter)
             echo -e "\t\t> $env_key -> $file_path"
             # create folder path
