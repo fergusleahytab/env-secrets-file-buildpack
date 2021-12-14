@@ -42,4 +42,7 @@ if [ -d "$ENV_DIR" ]; then
         fi
     done
     echo "saved $saved secrets" | indent
+    # link to home
+    ln -s $SECRETS_PATH "$HOME/$SECRETS_DIR"
+    echo "linked $SECRETS_PATH -> $HOME/$SECRETS_DIR" | indent
 fi
